@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For You, My Valentine ❤️</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: #050510;
+        background-image: radial-gradient(
+          circle at 50% 50%,
+          #1a1a40 0%,
+          #050510 100%
+        );
+        color: white;
+        font-family: "Outfit", sans-serif;
+        overflow: hidden;
+        height: 100vh;
+        width: 100vw;
+      }
+
+      #universe {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* Stars Background */
+      .star {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.8;
+        animation: twinkle var(--duration) infinite ease-in-out;
+      }
+
+      @keyframes twinkle {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: scale(0.8);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+      }
+
+      /* SVG Path */
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: visible;
+      }
+
+      #travel-path {
+        fill: none;
+        stroke: rgba(255, 105, 180, 0.3);
+        stroke-width: 2;
+        stroke-dasharray: 10 10;
+        opacity: 0.6;
+      }
+
+      /* Planets/Dots */
+      .planet {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: #ff69b4;
+        border-radius: 50%;
+        box-shadow:
+          0 0 15px #ff69b4,
+          0 0 30px #ff1493;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+      }
+
+      /* Spaceship */
+      #spaceship {
+        position: absolute;
+        font-size: 3rem;
+        z-index: 10;
+        transform: translate(-50%, -50%); /* Centered on path */
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+      }
+
+      /* Quote Container */
+      #message-box {
+        position: absolute;
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-align: center;
+        max-width: 80%;
+        width: 500px;
+        opacity: 0;
+        z-index: 20;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      #message-box h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #ffb7b2;
+      }
+
+      #message-box p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+      }
+
+      /* Final Heart */
+      #final-heart {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        font-size: 10rem;
+        z-index: 100;
+        opacity: 0;
+        filter: drop-shadow(0 0 50px red);
+        pointer-events: none;
+      }
+
+      /* Red Overlay */
+      #red-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, transparent 0%, rgba(255, 0, 0, 0.4) 100%);
+        opacity: 0;
+        z-index: 90;
+        pointer-events: none;
+      }
+
+      /* Confetti */
+      .confetti {
+        position: absolute;
+        font-size: 2rem;
+        z-index: 200;
+        pointer-events: none;
+        top: -10vh;
+      }
+
+      /* Footer */
+      #footer {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        font-size: 1.5rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-family: "Outfit", sans-serif;
+        z-index: 150;
+        text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="universe">
+      <!-- SVG Path Container -->
+      <svg
+        id="path-svg"
+        viewBox="0 0 1000 600"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <!-- A nice heart shape path -->
+        <path
+          id="travel-path"
+          d="M 500 200 C 500 100 300 100 300 250 C 300 450 500 550 500 550 C 500 550 700 450 700 250 C 700 100 500 100 500 200 Z"
+        />
+      </svg>
+
+      <!-- Planets placed manually near the path "stops" (approximate for visual, GSAP handles movement) -->
+      <!-- We will use JS to place these exactly on the path if needed, but for now specific stops -->
+      <!-- Start/End -->
+      <div class="planet" id="planet-store" style="opacity: 0"></div>
+
+      <!-- Spaceship -->
+      <div id="spaceship">🚀</div>
+
+      <!-- Message Box -->
+      <div id="message-box">
+        <h2 id="msg-title">Title</h2>
+        <p id="msg-text">Message goes here...</p>
+      </div>
+
+      <div id="final-heart">❤️</div>
+      <div id="red-overlay"></div>
+    </div>
+    
+    <div id="footer">For Maricel ❤ Neil 
+        </div>
+
+    <!-- GSAP Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+
+    <script>
+      // 1. Generate Stars
+      const universe = document.getElementById("universe");
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
+        star.style.width = Math.random() * 3 + "px";
+        star.style.height = star.style.width;
+        star.style.left = Math.random() * 100 + "%";
+        star.style.top = Math.random() * 100 + "%";
+        star.style.setProperty("--duration", Math.random() * 3 + 2 + "s");
+        universe.appendChild(star);
+      }
+
+      // 2. Setup GSAP
+      gsap.registerPlugin(MotionPathPlugin);
+
+      const quotes = [
+        {
+          title: "Mercury",
+          text: "You're my first thought every morning, swift and bright.",
+          color: "#B7B8B9", // Grey
+        },
+        {
+          title: "Venus",
+          text: "My love for you burns brighter than the hottest star.",
+          color: "#FFD700", // Gold
+        },
+        {
+          title: "Earth",
+          text: "You are my world, my home, my everything.",
+          color: "#4169E1", // Royal Blue
+        },
+        {
+          title: "Mars",
+          text: "My passion for you is as red as the rusty sands.",
+          color: "#FF4444", // Red
+        },
+        {
+          title: "Ceres",
+          text: "Small but mighty, just like the seed of our love.",
+          color: "#D3D3D3", // Light Grey
+        },
+        {
+          title: "Jupiter",
+          text: "My love for you is bigger than the biggest giant.",
+          color: "#FFA500", // Orange
+        },
+        {
+          title: "Saturn",
+          text: "I'd put a ring on it a thousand times over.",
+          color: "#F4A460", // Sandy Brown
+        },
+        {
+          title: "Uranus",
+          text: "You spin my world around in the most unique way.",
+          color: "#AFEEEE", // Pale Turquoise
+        },
+        {
+          title: "Neptune",
+          text: "My feelings for you run deeper than the deepest oceans.",
+          color: "#1E90FF", // Dodger Blue
+        },
+        {
+          title: "Pluto",
+          text: "No matter how far apart, you are always in my heart.",
+          color: "#FFF5EE", // Seashell
+        },
+        {
+          title: "Haumea",
+          text: "Our love has a shape all its own, perfectly us.",
+          color: "#E6E6FA", // Lavender
+        },
+        {
+          title: "Makemake",
+          text: "You make make me the happiest person in the universe.",
+          color: "#FA8072", // Salmon
+        },
+        {
+          title: "Eris",
+          text: "Even in the furthest reaches, I'd still find you.",
+          color: "#C0C0C0", // Silver
+        },
+      ];
+
+      // 3. Create Planets on the path
+      // We'll use MotionPathPlugin to convert the path to coordinates for us to place planets
+      // But for simplicity in this artifact, we will use the 'align' feature or just simple stops.
+      // Actually, let's just create visual dots at specific progress points.
+
+      const path = "#travel-path";
+      const msgBox = document.getElementById("message-box");
+      const msgTitle = document.getElementById("msg-title");
+      const msgText = document.getElementById("msg-text");
+      const spaceship = document.getElementById("spaceship");
+
+      function createPlanetAtProgress(progress, id) {
+        const point = MotionPathPlugin.getRelativePosition(
+          spaceship,
+          path,
+          { x: 0.5, y: 0.5 },
+          process,
+        );
+        // This is complex to calculate statically without running JS.
+        // Instead, we will just let GSAP pause at these progress points.
+      }
+
+      // 4. The Animation Timeline
+      const tl = gsap.timeline({ repeat: -1, repeatDelay: 2 });
+
+      // Helper to show message
+      function showMessage(index) {
+        msgTitle.innerText = quotes[index].title;
+        msgText.innerText = quotes[index].text;
+        
+        // Optional: Tint the message box border with the planet color?
+        // let color = quotes[index].color || "white";
+        // msgBox.style.borderColor = color;
+        
+        gsap.to(msgBox, { opacity: 1, duration: 0.5, y: -10 });
+      }
+
+      function hideMessage() {
+        gsap.to(msgBox, { opacity: 0, duration: 0.5, y: 0 });
+      }
+
+      // Dynamic stops based on number of quotes (exclude start/end overlap if creating a loop)
+      // We want to distribute them along the path from 0 to slightly less than 1
+      const stops = quotes.map((_, i) => i / quotes.length); 
+      
+      stops.forEach((stop, i) => {
+            // 1. Place Planet
+            const planet = document.createElement('div');
+            planet.className = 'planet';
+            
+            // Apply custom color if available
+            if (quotes[i] && quotes[i].color) {
+                const c = quotes[i].color;
+                planet.style.background = c;
+                planet.style.boxShadow = `0 0 15px ${c}, 0 0 30px ${c}`;
+            }
+            
+            universe.appendChild(planet);
+
+            gsap.set(planet, {
+                motionPath: {
+                    path: "#travel-path",
+                    align: "#travel-path",
+                    alignOrigin: [0.5, 0.5],
+                    autoRotate: false,
+                    start: stop,
+                    end: stop
+                }
+            });
+
+            // 2. Add to Timeline
+            if (i >= quotes.length) return;
+
+            // Move spaceship to this stop
+            tl.to("#spaceship", {
+                motionPath: {
+                    path: path,
+                    align: path,
+                    autoRotate: true,
+                    alignOrigin: [0.5, 0.5],
+                    start: i === 0 ? 0 : stops[i-1],
+                    end: stop
+                },
+                duration: 3,
+                ease: "power1.inOut",
+                onStart: () => {
+                    if (i > 0) hideMessage();
+                }
+            });
+
+            // Pause and show message
+            tl.add(() => showMessage(i));
+            tl.to({}, { duration: 3 }); 
+        });
+
+      // Complete the loop to the beginning
+      tl.to("#spaceship", {
+        motionPath: {
+          path: path,
+          align: path,
+          autoRotate: true,
+          alignOrigin: [0.5, 0.5],
+          start: stops[stops.length - 1],
+          end: 1,
+        },
+        duration: 2,
+        ease: "power1.inOut",
+        onStart: hideMessage,
+      });
+
+      // Confetti Effect
+      function startConfetti() {
+          const emojis = ["❤️", "💋", "💖", "😘", "💌", "🌹", "💗", "💞", "💘", "✨", "💫", "🥰"];
+          
+          for(let i=0; i<150; i++) { // More confetti
+              const el = document.createElement('div');
+              el.className = 'confetti';
+              el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+              el.style.left = Math.random() * 100 + '%';
+              // Randomize size
+              el.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+              
+              universe.appendChild(el);
+              
+              // Physics-ish animation
+              gsap.to(el, {
+                  y: "110vh",
+                  x: (Math.random() - 0.5) * 300, // drift
+                  rotation: Math.random() * 360,
+                  duration: Math.random() * 5 + 3,
+                  delay: Math.random() * 12, // Spread start times over 12s
+                  ease: "power1.out",
+                  onComplete: () => el.remove()
+              });
+          }
+      }
+
+      // Final "Happy Valentine's Day" state
+      tl.add(() => {
+        msgTitle.innerText = "Happy Valentine's Day! ❤️";
+        msgText.innerText = "I love you to the moon and back.";
+        gsap.to(msgBox, { opacity: 1, duration: 1, scale: 1.1 });
+        gsap.to("#final-heart", {
+          opacity: 1,
+          scale: 1,
+          duration: 1,
+          ease: "elastic.out(1, 0.3)",
+        });
+        
+        // Finale Effects
+        gsap.to("#red-overlay", { opacity: 1, duration: 2 });
+        startConfetti();
+      });
+
+      tl.to({}, { duration: 15 }); // Hold final state for 15s
+
+      // Reset for loop
+      tl.add(() => {
+        gsap.to("#final-heart", { opacity: 0, scale: 0, duration: 0.5 });
+        gsap.to(msgBox, { opacity: 0, scale: 1, duration: 0.5 });
+        gsap.to("#red-overlay", { opacity: 0, duration: 1 });
+      });
+
+      // Add planets visually at the stops (Visual flair)
+      // We do this after the path is rendered
+      window.onload = () => {
+        stops.forEach((stop) => {
+          // We can use GSAP to find the coordinates
+          // This is a bit hacky to place DOM elements on SVG path coordinates, but works for visual
+          const rawPath = MotionPathPlugin.getRawPath(path);
+          MotionPathPlugin.cacheRawPathMeasurements(rawPath);
+          // We won't perfectly place them in this script without more complex math,
+          // but the ship will visit the invisible spots.
+          // To make it look good, let's just rely on the ship's movement and the 'planets'
+          // being the destinations.
+        });
+      };
+    </script>
+  </body>
+</html>
